@@ -1,6 +1,6 @@
 # API_simulator
 Senior Seminar Project: an API simulator for development environments
-Authors: Rowen Felt and Zebedia Millslagle
+Authors: Rowen Felt and Zebediah Millslagle
 
 The project is divided into sections: importable libraries and the command line tool.
 
