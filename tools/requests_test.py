@@ -12,6 +12,10 @@ def get_test():
   print("get:")
   r = requests.get('http://httpbin.org/get', proxies=proxy_urls_2)
   r2 = requests.get('http://httpbin.org/get')
+  #print(" ")
+  #print(r.content)
+  #print(" ")
+  #print(r2.content)
   if r.content == r2.content:
     print("passed")
   else:

@@ -21,13 +21,24 @@ def proxy_request(path):
     METHOD = request.method
     response = pr_db.retrieve(METHOD, URL)
     if response == None:
-        # carry out request, store response in cache, update file cache
+        # carry out request, store response database 
         response = resolve_request(request)
         pr_db.store(METHOD, URL, response)
     else:
         print("returned a store response")
-    # return response from cache
-    return response 
+
+    return format_response(response)
+
+def format_response(resp):
+    ''' correctly formats a request '''
+    # unsure if we need these, sometimes doesn't work without
+    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+    headers = [(name, value) for (name, value) in resp.headers.items()
+               if name.lower() not in excluded_headers]
+
+    # create and return Response object
+    response = Response(resp.content, resp.status_code, headers)
+    return response
 
 def resolve_request(request):
     # get response from given request
@@ -38,15 +49,7 @@ def resolve_request(request):
         data=request.get_data(),
         cookies=request.cookies,
         allow_redirects=False)
-
-    # unsure if we need these, sometimes doesn't work without
-    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-    headers = [(name, value) for (name, value) in resp.raw.headers.items()
-               if name.lower() not in excluded_headers]
-
-    # create and return Response object
-    response = Response(resp.content, resp.status_code, headers)
-    return response
+    return resp
 
 def update_cache():
     # currently updating in a non-readable format, need to look into jsonifying
