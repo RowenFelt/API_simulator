@@ -1,6 +1,7 @@
 from flask import Flask, flash, request, Response, send_from_directory, redirect, url_for, jsonify, json
 import requests
 import proxy_database as pr_db
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -19,16 +20,22 @@ def proxy_request(path):
     # get url and method to store in cache
     URL = request.url
     METHOD = request.method
-    response = pr_db.retrieve(METHOD, URL)
-    if response == None:
+    response, timestamp = pr_db.retrieve(METHOD, URL)
+    if response == None or invalid_timestamp(timestamp):
         # carry out request, store response database 
         response = resolve_request(request)
         pr_db.store(METHOD, URL, response)
     else:
         print("returned a store response")
-
     return format_response(response)
 
+def invalid_timestamp(timestamp):
+    """ Returns True if timestamp is invalid, or False otherwise """
+    if timestamp == None:
+        return True
+    else:
+        return False
+    
 def format_response(resp):
     ''' correctly formats a request '''
     # unsure if we need these, sometimes doesn't work without
