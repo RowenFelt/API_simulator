@@ -5,7 +5,7 @@ import parse_configuration
 from datetime import datetime
 
 app = Flask(__name__)
-user_params = {}
+user_params = None
 
 @app.after_request
 def after_request(response):
@@ -34,6 +34,8 @@ def proxy_request(path):
 def invalid_timestamp(timestamp):
     """ Returns True if timestamp is invalid, or False otherwise """
     if timestamp == None:
+        return True
+    elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
         return True
     else:
         return False

@@ -10,7 +10,7 @@ def store(method, url, response):
     # Create table
     init_table(conn, c)
     resp = pickle.dumps(response)
-    query = '''INSERT INTO proxy_responses (method, url, response, timestamp) VALUES (?, ?, ?, ?);'''
+    query = '''REPLACE INTO proxy_responses (method, url, response, timestamp) VALUES (?, ?, ?, ?);'''
     c.execute(query, [method, url, resp, unix_time_millis(datetime.now())])
     conn.commit()
     conn.close()
