@@ -3,3 +3,4 @@ plugins/logfile
 tools/save.p
 tools/data
 tools/__pycache__/
+tools/config

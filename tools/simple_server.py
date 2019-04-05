@@ -1,9 +1,11 @@
 from flask import Flask, flash, request, Response, send_from_directory, redirect, url_for, jsonify, json
 import requests
 import proxy_database as pr_db
+import parse_configuration
 from datetime import datetime
 
 app = Flask(__name__)
+user_params = {}
 
 @app.after_request
 def after_request(response):
@@ -64,6 +66,7 @@ def update_cache():
     pickle.dump(cache, open("save.p", "wb"))
 
 if __name__ == "__main__":
+    user_params = parse_configuration.userConfiguration()
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.debug = True
