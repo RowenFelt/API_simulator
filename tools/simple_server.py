@@ -1,8 +1,11 @@
 from flask import Flask, flash, request, Response, send_from_directory, redirect, url_for, jsonify, json
 import requests
 import proxy_database as pr_db
+import parse_configuration
+from datetime import datetime
 
 app = Flask(__name__)
+user_params = None
 
 @app.after_request
 def after_request(response):
@@ -19,16 +22,24 @@ def proxy_request(path):
     # get url and method to store in cache
     URL = request.url
     METHOD = request.method
-    response = pr_db.retrieve(METHOD, URL)
-    if response == None:
+    response, timestamp = pr_db.retrieve(METHOD, URL)
+    if response == None or invalid_timestamp(timestamp):
         # carry out request, store response database 
         response = resolve_request(request)
         pr_db.store(METHOD, URL, response)
     else:
         print("returned a store response")
-
     return format_response(response)
 
+def invalid_timestamp(timestamp):
+    """ Returns True if timestamp is invalid, or False otherwise """
+    if timestamp == None:
+        return True
+    elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
+        return True
+    else:
+        return False
+    
 def format_response(resp):
     ''' correctly formats a request '''
     # unsure if we need these, sometimes doesn't work without
@@ -57,6 +68,7 @@ def update_cache():
     pickle.dump(cache, open("save.p", "wb"))
 
 if __name__ == "__main__":
+    user_params = parse_configuration.userConfiguration()
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.debug = True
