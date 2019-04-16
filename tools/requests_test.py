@@ -69,8 +69,8 @@ def uncached_url_test():
 
 def set_dynamic_config_test():
     print("dynamic configuration:")
-    url = "http://localhost:5000/config/persistence"
-    r = requests.post(url, json = {'persistence':'False'}, proxies=proxy_urls)
+    url = "http://localhost:5000/config"
+    r = requests.post(url, json = {'persistence':'False', 'response_file':'True'}, proxies=proxy_urls)
     if r.status_code == 200:
         print("passed")
     else:

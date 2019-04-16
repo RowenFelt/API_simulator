@@ -31,14 +31,15 @@ def proxy_request(path):
         print("returned a store response")
     return format_response(response)
 
-@app.route('/config/<path:path>', methods=['POST'])
-def config_dynamic(path):
+@app.route('/config', methods=['POST'])
+def config_dynamic():
     """ Sets a user configuration as described in the request body """
     global user_params
-    temp_params, result = parse_configuration.dynamically_config(path, request.json, user_params)
+    temp_params, result = parse_configuration.dynamically_config(request.json, user_params)
     if result:
         user_params = temp_params
         print(user_params.persistence)
+        print(user_params.response_file)
         return make_response("Success", 200)
     else:
         return make_response("Failure", 404)

@@ -35,7 +35,7 @@ def readConfigFile():
             user_params.timeout += TIME_DELTA[key] * int(config['TIMEOUT'][key])
     return user_params
 
-def dynamically_config(path, request_json, user_params):
+def dynamically_config(request_json, user_params):
     """ Configures user_parameters with the specified parameter, json body, and user params """
     for key in request_json.keys():
         if key == "TIMEOUT" or key == "timeout":
@@ -53,7 +53,10 @@ def dynamically_config(path, request_json, user_params):
             else:
                 return None, False
         elif key == "response_file":
-            user_params.response_file = request_json[key]
+            if request_json[key] == "False" or request_json[key] == "false":
+                user_params.response_file = False 
+            else:
+                user_params.response_file = request_json[key]
         elif key == "uncached_apis":
             user_params.uncached_apis.append(request_json[key])
         else:
