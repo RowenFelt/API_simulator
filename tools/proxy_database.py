@@ -11,7 +11,8 @@ def store(method, url, response):
     init_table(conn, c)
     resp = pickle.dumps(response)
     query = '''REPLACE INTO proxy_responses (method, url, response, timestamp) VALUES (?, ?, ?, ?);'''
-    c.execute(query, [method, url, resp, unix_time_millis(datetime.now())])
+    timestamp = unix_time_millis(datetime.now())
+    c.execute(query, [method, url, resp, timestamp])
     conn.commit()
     conn.close()
 
