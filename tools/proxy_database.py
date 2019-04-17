@@ -3,6 +3,8 @@ import json
 import pickle
 from datetime import datetime
 
+cache = {}
+
 def store(method, url, response):
     ''' stores a response in the proxy_database SQLite table'''
     conn = sqlite3.connect('data/proxy_database.db')
@@ -14,6 +16,13 @@ def store(method, url, response):
     c.execute(query, [method, url, resp, unix_time_millis(datetime.now())])
     conn.commit()
     conn.close()
+
+def temp_store(method, url, response):
+    ''' stores a response locally in a dictionary'''
+    key = (method, url)
+    resp = pickle.dumps(response)
+    timestamp = unix_time_millis(datetime.now())
+    cache[key] = resp, timestamp
 
 def retrieve(method, url):
     ''' retrieves a response stored with method and url or None if none is found'''
@@ -30,6 +39,16 @@ def retrieve(method, url):
         return response, timestamp
     else:
         return None, None
+
+def temp_retrieve(method, url):
+    ''' retrieves a stored response from the local dictionary'''
+    key = (method, url)
+    if key not in cache:
+        return None, None
+    else:
+        response, timestamp = cache[key]
+        response = pickle.loads(response)
+        return response, timestamp
 
 def init_table(connection, cursor):
     ''' Initializes SQLite table '''

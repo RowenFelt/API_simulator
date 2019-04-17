@@ -18,21 +18,19 @@ def after_request(response):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def proxy_request(path):
-    """ Returns a stored response if such exists, otherwise returns -1 """
+    ''' Returns a stored response if such exists, otherwise returns -1 '''
     # get url and method to store in cache
-    URL = request.url
-    METHOD = request.method
-    response, timestamp = pr_db.retrieve(METHOD, URL)
+    response, timestamp = user_params.retrieve(request.method, request.url)
     if response == None or invalid_timestamp(timestamp):
         # carry out request, store response database 
         response = resolve_request(request)
-        pr_db.store(METHOD, URL, response)
+        user_params.store(request.method, request.url, response)
     else:
         print("returned a store response")
     return format_response(response)
 
 def invalid_timestamp(timestamp):
-    """ Returns True if timestamp is invalid, or False otherwise """
+    ''' Returns True if timestamp is invalid, or False otherwise '''
     if timestamp == None:
         return True
     elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
@@ -65,7 +63,8 @@ def resolve_request(request):
 def update_cache():
     # currently updating in a non-readable format, need to look into jsonifying
     # binary data
-    pickle.dump(cache, open("save.p", "wb"))
+    # pickle.dump(cache, open("save.p", "wb"))
+    return
 
 if __name__ == "__main__":
     user_params = parse_configuration.userConfiguration()
