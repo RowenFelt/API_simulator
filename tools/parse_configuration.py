@@ -11,9 +11,9 @@ TIME_DELTA = {"days": 86400000, "hours": 3600000, "minutes": 60000, "seconds": 1
 class Configurations:
     def __init__(self):
         self.port_number = None
-        self.custom_response_file = None
-        #self.persistence = None
-        self.allowable_urls = None
+        self.response_file = None
+        self.persistence = None
+        self.uncached_apis = None
         self.timeout = None
         self.store = None
         self.retrieve = None
@@ -45,6 +45,34 @@ def readConfigFile():
         
     return user_params
 
+def dynamically_config(request_json, user_params):
+    """ Configures user_parameters with the specified parameter, json body, and user params """
+    for key in request_json.keys():
+        if key == "TIMEOUT" or key == "timeout":
+            user_params.timeout = 0
+            for segment in request_json[key].keys():
+                if segment in TIME_DELTA.keys():
+                    user_params.timeout += TIME_DELTA[segment] * int(request_json[key][segment])
+                else:
+                    return None, False
+        elif key == "persistence":
+            if request_json[key] == "True" or request_json[key] == "true":
+                user_params.persistence = True
+            elif request_json[key] == "False" or request_json[key] == "false":
+                user_params.persistence = False
+            else:
+                return None, False
+        elif key == "response_file":
+            if request_json[key] == "False" or request_json[key] == "false":
+                user_params.response_file = False 
+            else:
+                user_params.response_file = request_json[key]
+        elif key == "uncached_apis":
+            user_params.uncached_apis.append(request_json[key])
+        else:
+            return None, False
+    return user_params, True
+
 def evaluate_default_parameters(key, string, user_params):
     """ Converts from user-defined strings to parameters """
     if key == "port_number":
@@ -58,8 +86,8 @@ def evaluate_default_parameters(key, string, user_params):
         else:
             user_params.store = pr_db.temp_store
             user_params.retrieve = pr_db.temp_retrieve
-    elif key == "allowable_urls":
-        user_params.allowable_urls = string.split(' ')
+    elif key == "uncached_apis":
+        user_params.uncached_apis = string.split(' ')
 
 def evaluate_custom_responses_parameters(file_name, user_params):
     ''' stores files from custom responses file'''
@@ -99,7 +127,7 @@ def initConfigureFile():
     config.add_section('GENERAL') 
     config.set('GENERAL', 'port_number', '5000')
     config.set('GENERAL', 'persistence', 'True')
-    config.set('GENERAL', 'allowable_urls', 'yourmom.com yourdad.com')
+    config.set('GENERAL', 'uncached_apis', 'yourmom.com http://httpbin.org/image/jpeg')
     config.add_section('CUSTOM_RESPONSES')
     config.set('CUSTOM_RESPONSES', 'use_custom_responses', 'True')
     config.set('CUSTOM_RESPONSES', 'file_name', 'custom_responses.json')
