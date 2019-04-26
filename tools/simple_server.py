@@ -23,8 +23,6 @@ def proxy_request(path):
     # get url and method to store in cache
     response, timestamp = user_params.retrieve(request.method, request.url)
     if response == None or invalid_timestamp(timestamp):
-        print(response)
-        print(timestamp)
        # carry out request, store response database 
         response = resolve_request(request)
     else:

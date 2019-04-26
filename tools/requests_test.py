@@ -10,7 +10,7 @@ def get_test():
     print("get:")
     r = requests.get('http://httpbin.org/get', proxies=proxy_urls)
     r2 = requests.get('http://httpbin.org/get')
-    if r.content == r2.content:
+    if r.json() == r2.json():
         print("passed")
     else:
         print("failed")
@@ -20,7 +20,7 @@ def put_test():
     print("put:")
     r = requests.put('http://httpbin.org/put', data = {'key':'value'}, proxies=proxy_urls)
     r2 = requests.put('http://httpbin.org/put', data = {'key':'value'})
-    if r.content == r2.content:
+    if r.json() == r2.json():
         print("passed")
     else:
         print("failed")
@@ -30,7 +30,7 @@ def post_test():
     print("post:")
     r = requests.post('http://httpbin.org/post', data = {'key':'value'}, proxies=proxy_urls)
     r2 = requests.post('http://httpbin.org/post', data = {'key':'value'})
-    if r.content == r2.content:
+    if r.json() == r2.json():
         print("passed")
     else:
         print("failed")
@@ -40,16 +40,25 @@ def delete_test():
     print("delete:")
     r = requests.delete('http://httpbin.org/delete', proxies = proxy_urls)
     r2 = requests.delete('http://httpbin.org/delete')
-    if r.content == r2.content:
+    if r.json() == r2.json():
         print("passed")
     else:
         print("failed")
     return 0
 
+def custom_responses_test():
+    print("custom responses:")
+    r = requests.get('http://httpbin.org/ip', proxies=proxy_urls)
+    r2 = requests.get('http://httpbin.org/ip')
+    if r.json() == r2.json():
+        print("passed")
+    else:
+        print("failed")
+
 def different_status_test():
     r = requests.get('http://httpbin.org/status/404', proxies = proxy_urls)
     r2 = requests.get('http://httpbin.org/status/404')
-    if r.content == r2.content:
+    if r.json() == r2.json():
         print("passed")
     else:
         print("failed")
@@ -82,5 +91,7 @@ if __name__ == "__main__":
     put_test()
     post_test()
     delete_test()
+    custom_responses_test()
     uncached_url_test()
     set_dynamic_config_test()
+    

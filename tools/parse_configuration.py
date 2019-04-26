@@ -94,7 +94,7 @@ def evaluate_custom_responses_parameters(file_name, user_params):
     custom_responses_file = Path(file_name)
     if not custom_responses_file.is_file():
         # if file does not already exist, create it with some example data
-        example_data = {
+        example_data = [{
             "method": "GET",
             "url": "http://httpbin.org/ip",
             "content": {
@@ -108,17 +108,17 @@ def evaluate_custom_responses_parameters(file_name, user_params):
                 "origin": "140.233.185.118, 140.233.185.118",
                 "url": "https://httpbin.org/ip"
             }
-        }
+        }]
         with open(file_name, 'x') as outfile:
-            json.dump(example_data, outfile, indent=2)
+            json.dump(example_data, outfile, indent=4)
     # read from file, format as response, store in database
-    #return
     with open(file_name, 'r') as json_file:
         data = json.load(json_file)
-        response = Response()
-        response.content = json.dumps(data["content"])
-        response.headers = data["content"]["headers"]
-        user_params.store(data["method"], data["url"], response)
+        for custom_response in data:
+            response = Response()
+            response.content = json.dumps(custom_response["content"])
+            response.headers = custom_response["content"]["headers"]
+            user_params.store(custom_response["method"], custom_response["url"], response)
 
 
 def initConfigureFile():
