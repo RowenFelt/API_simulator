@@ -19,12 +19,10 @@ def after_request(response):
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def proxy_request(path):
-    """ Returns a stored response if such exists, otherwise returns -1 """
+    ''' Returns a stored response if such exists, otherwise returns -1 '''
     # get url and method to store in cache
-    response, timestamp = pr_db.retrieve(request.method, request.url)
+    response, timestamp = user_params.retrieve(request.method, request.url)
     if response == None or invalid_timestamp(timestamp):
-        print(response)
-        print(timestamp)
        # carry out request, store response database 
         response = resolve_request(request)
     else:
@@ -45,7 +43,7 @@ def config_dynamic():
         return make_response("Failure", 404)
 
 def invalid_timestamp(timestamp):
-    """ Returns True if timestamp is invalid, or False otherwise """
+    ''' Returns True if timestamp is invalid, or False otherwise '''
     if timestamp == None:
         return True
     elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
@@ -77,14 +75,15 @@ def resolve_request(request):
     if any(api in request.url for api in user_params.uncached_apis):
         return resp
     else:
-        pr_db.store(request.method, request.url, resp)
+        user_params.store(request.method, request.url, resp)
         return resp
 
 
 def update_cache():
     # currently updating in a non-readable format, need to look into jsonifying
     # binary data
-    pickle.dump(cache, open("save.p", "wb"))
+    # pickle.dump(cache, open("save.p", "wb"))
+    return
 
 if __name__ == "__main__":
     user_params = parse_configuration.userConfiguration()

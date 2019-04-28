@@ -4,3 +4,4 @@ tools/save.p
 tools/data
 tools/__pycache__/
 tools/config
+tools/custom_responses.json
