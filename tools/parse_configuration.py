@@ -13,7 +13,7 @@ class Configurations:
         self.port_number = None
         self.response_file = None
         self.persistence = None
-        self.uncached_apis = None
+        self.uncached_apis = list()
         self.timeout = None
         self.store = None
         self.retrieve = None
