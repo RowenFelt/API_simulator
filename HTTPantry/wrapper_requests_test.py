@@ -1,15 +1,15 @@
 import requests as req
 import os
 import proxy_database as pr_db
-from requests_wrapper import RequestsWrapper
+#from requests_wrapper import RequestsWrapper
 import time
 
-requests = RequestsWrapper()
+import TestLibrary as requests
 
 def get_test():
     print("get:")
-    r = requests.get('http://httpbin.org/get')
-    r2 = req.get('http://httpbin.org/get')
+    r = requests.get('https://httpbin.org/get')
+    r2 = req.get('https://httpbin.org/get')
     if r.content == r2.content:
         print("passed")
     else:

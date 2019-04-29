@@ -78,13 +78,6 @@ def resolve_request(request):
         user_params.store(request.method, request.url, resp)
         return resp
 
-
-def update_cache():
-    # currently updating in a non-readable format, need to look into jsonifying
-    # binary data
-    # pickle.dump(cache, open("save.p", "wb"))
-    return
-
 if __name__ == "__main__":
     user_params = parse_configuration.userConfiguration()
     app.secret_key = 'super secret key'

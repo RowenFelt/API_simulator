@@ -3,7 +3,7 @@ import sys
 import json
 import proxy_database as pr_db
 from pathlib import Path
-from flask import Response, jsonify
+from flask import Response
 
 CONFIGURE_FILE = "./config"
 TIME_DELTA = {"days": 86400000, "hours": 3600000, "minutes": 60000, "seconds": 1000, "milliseconds": 1}
@@ -133,9 +133,9 @@ def initConfigureFile():
     config.set('CUSTOM_RESPONSES', 'file_name', 'custom_responses.json')
     config.add_section('TIMEOUT')
     config.set('TIMEOUT', 'days', '0')
-    config.set('TIMEOUT', 'hours', '0')
+    config.set('TIMEOUT', 'hours', '1')
     config.set('TIMEOUT', 'minutes', '0')
-    config.set('TIMEOUT', 'seconds', '5')
+    config.set('TIMEOUT', 'seconds', '0')
     config.set('TIMEOUT', 'milliseconds', '0')
     with open(CONFIGURE_FILE, 'w') as configfile:
         config.write(configfile)
