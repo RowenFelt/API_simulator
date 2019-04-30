@@ -1,6 +1,7 @@
 import parse_configuration
 import requests
 from .requests_wrapper import handle_request
+import http_proxy_server
 
 user_params = parse_configuration.userConfiguration()
 
@@ -24,7 +25,9 @@ def __getattr__(name):
         except:
             raise
     
-    if name in known_methods:
+    if name == 'init_proxy_server':
+        return http_proxy_server.init_proxy_server()
+    elif name in known_methods:
         return call_known_method
     else:
         return call_unknown_method

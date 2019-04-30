@@ -78,7 +78,7 @@ def resolve_request(request):
         user_params.store(request.method, request.url, resp)
         return resp
 
-if __name__ == "__main__":
+def init_proxy_server():
     user_params = parse_configuration.userConfiguration()
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
