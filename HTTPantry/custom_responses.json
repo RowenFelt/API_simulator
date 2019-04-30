@@ -10,8 +10,8 @@
                 "Host": "httpbin.org",
                 "User-Agent": "python-requests/2.21.0"
             },
-            "origin": "140.233.185.118, 140.233.185.118",
-            "url": "https://httpbin.org/ip"
+            "origin": "140.233.162.81, 140.233.162.81",
+            "url": "http://httpbin.org/ip"
         }
     }
 ]

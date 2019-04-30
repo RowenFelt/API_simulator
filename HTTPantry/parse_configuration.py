@@ -23,17 +23,15 @@ def userConfiguration():
     configure_file = Path(CONFIGURE_FILE)
     if not configure_file.is_file():
         initConfigureFile()
-    user_params = readConfigFile()
-    return user_params
+    readConfigFile()
 
 def readConfigFile():
     """ Reads a configuration file """
     config = configparser.ConfigParser()
-    user_params = Configurations()
     config.read(CONFIGURE_FILE)
 
     for key in config['GENERAL']:
-        evaluate_default_parameters(key, config['GENERAL'][key], user_params)
+        evaluate_default_parameters(key, config['GENERAL'][key])
     user_params.timeout = 0
 
     for key in config['TIMEOUT']:
@@ -41,11 +39,9 @@ def readConfigFile():
             user_params.timeout += TIME_DELTA[key] * int(config['TIMEOUT'][key])
     
     if config['CUSTOM_RESPONSES']['use_custom_responses'] == "True":
-        evaluate_custom_responses_parameters(config['CUSTOM_RESPONSES']['file_name'], user_params)
-        
-    return user_params
+        evaluate_custom_responses_parameters(config['CUSTOM_RESPONSES']['file_name'])
 
-def dynamically_config(request_json, user_params):
+def dynamically_config(request_json):
     """ Configures user_parameters with the specified parameter, json body, and user params """
     for key in request_json.keys():
         if key == "TIMEOUT" or key == "timeout":
@@ -54,14 +50,14 @@ def dynamically_config(request_json, user_params):
                 if segment in TIME_DELTA.keys():
                     user_params.timeout += TIME_DELTA[segment] * int(request_json[key][segment])
                 else:
-                    return None, False
+                    return False
         elif key == "persistence":
             if request_json[key] == "True" or request_json[key] == "true":
                 user_params.persistence = True
             elif request_json[key] == "False" or request_json[key] == "false":
                 user_params.persistence = False
             else:
-                return None, False
+                return False
         elif key == "response_file":
             if request_json[key] == "False" or request_json[key] == "false":
                 user_params.response_file = False 
@@ -70,10 +66,10 @@ def dynamically_config(request_json, user_params):
         elif key == "uncached_apis":
             user_params.uncached_apis.append(request_json[key])
         else:
-            return None, False
-    return user_params, True
+            return False
+    return True
 
-def evaluate_default_parameters(key, string, user_params):
+def evaluate_default_parameters(key, string):
     """ Converts from user-defined strings to parameters """
     if key == "port_number":
         user_params.port_number = int(string)
@@ -89,7 +85,7 @@ def evaluate_default_parameters(key, string, user_params):
     elif key == "uncached_apis":
         user_params.uncached_apis = string.split(' ')
 
-def evaluate_custom_responses_parameters(file_name, user_params):
+def evaluate_custom_responses_parameters(file_name):
     ''' stores files from custom responses file'''
     custom_responses_file = Path(file_name)
     if not custom_responses_file.is_file():
@@ -140,3 +136,5 @@ def initConfigureFile():
     with open(CONFIGURE_FILE, 'w') as configfile:
         config.write(configfile)
         configfile.close()
+
+user_params = Configurations()

@@ -10,7 +10,7 @@ file_name = custom_responses.json
 [TIMEOUT]
 days = 0
 hours = 0
-minutes = 0
-seconds = 5
+minutes = 1
+seconds = 0
 milliseconds = 0
 
