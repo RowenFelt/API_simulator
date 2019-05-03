@@ -1,10 +1,10 @@
 import requests as req
 import os
-import proxy_database as pr_db
+import httpantry.proxy_database as pr_db
 #from requests_wrapper import RequestsWrapper
 import time
 
-import TestLibrary as requests
+import httpantry as requests
 
 def get_test():
     print("get:")

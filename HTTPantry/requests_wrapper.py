@@ -1,8 +1,8 @@
 import requests
 from requests.models import Response
 import sys
-import proxy_database as pr_db
-import parse_configuration
+import httpantry.proxy_database as pr_db
+import httpantry.parse_configuration as parse_configuration
 from datetime import datetime
 
 user_params = parse_configuration.userConfiguration()

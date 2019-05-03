@@ -1,6 +1,8 @@
-import parse_configuration
+import httpantry.parse_configuration as parse_configuration
 import requests
 from .requests_wrapper import handle_request
+
+print("httpantry imported")
 
 user_params = parse_configuration.userConfiguration()
 
@@ -8,6 +10,8 @@ def __getattr__(name):
     """
     Handle method calls
     """
+
+    print(name)
 
     known_methods = ["get", "post", "put", "delete", "patch"]
     

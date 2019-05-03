@@ -1,7 +1,7 @@
 import configparser
 import sys
 import json
-import proxy_database as pr_db
+import httpantry.proxy_database as pr_db
 from pathlib import Path
 from flask import Response
 
