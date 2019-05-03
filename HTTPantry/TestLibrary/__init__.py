@@ -2,7 +2,11 @@ import parse_configuration
 import requests
 from .requests_wrapper import handle_request
 import http_proxy_server
+import os
+import stat
 
+CACHE_PATH = "__httpantry_cache__"
+DEPLOYABLE_PATH = "deployable_database.py"
 user_params = parse_configuration.userConfiguration()
 
 def __getattr__(name):
@@ -31,3 +35,10 @@ def __getattr__(name):
         return call_known_method
     else:
         return call_unknown_method
+
+def validate_cache_dir():
+    ''' Validates that the cache directory has been set up correctly '''
+    if not os.path.isdir(CACHE_PATH):
+        os.mkdir(CACHE_PATH) 
+
+validate_cache_dir()
