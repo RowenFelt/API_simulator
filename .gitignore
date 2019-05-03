@@ -1,8 +1,2 @@
-plugins/data
-plugins/logfile
-HTTPantry/save.p
-HTTPantry/data
-HTTPantry/__pycache__/*
-HTTPantry/config
-HTTPantry/custom_responses.json
-httpantry.egg-info/*
+testing/__httpantry_cache__/*
+httpantry.egg*

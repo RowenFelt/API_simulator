@@ -1,6 +1,6 @@
 import requests
 import os
-import proxy_database as pr_db
+import httpantry.proxy_database as pr_db
 
 proxy_urls = {
   'http': 'http://localhost:5000'

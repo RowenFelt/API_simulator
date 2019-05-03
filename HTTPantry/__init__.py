@@ -8,6 +8,7 @@ import stat
 
 CACHE_PATH = "__httpantry_cache__"
 DEPLOYABLE_PATH = "deployable_database.py"
+INIT = False
 
 def __getattr__(name):
     """
@@ -27,13 +28,13 @@ def __getattr__(name):
 
     def call_known_method(*args, **kwargs):
         try:
+            if not INIT:
+                validate_cache_dir()
             return handle_request(name, *args, **kwargs)
         except:
             raise
     
-    if name == 'init_proxy_server':
-        return http_proxy_server.init_proxy_server()
-    elif name in known_methods:
+    if name in known_methods:
         return call_known_method
     else:
         return call_unknown_method
@@ -42,6 +43,6 @@ def validate_cache_dir():
     ''' Validates that the cache directory has been set up correctly '''
     if not os.path.isdir(CACHE_PATH):
         os.mkdir(CACHE_PATH) 
+    INIT = True
+    parse_configuration.userConfiguration()
 
-validate_cache_dir()
-parse_configuration.userConfiguration()

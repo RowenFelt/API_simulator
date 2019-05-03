@@ -2,9 +2,7 @@
 Senior Seminar Project: an API simulator for development environments
 Authors: Rowen Felt and Zebediah Millslagle
 
-The project is divided into sections: importable libraries and the command line tool.
+Testing installation:
 
-The plugins section contains importable libraries.
-
-The tools directory contains the command line tool version.
+pip install -e .
 
