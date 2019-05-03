@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="httpantry",
-    version="0.0.1",
+    version="0.0.4",
     author="Rowen Felt, Zebediah Millslagle",
     author_email="rowenfelt@gmail.com, zmillslagle@gmail.com",
     description="Caches HTTP requests for faster, more efficient development",
@@ -13,6 +13,12 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/RowenFelt/httpantry",
     packages=['httpantry'],
+    install_requires=[
+          'pathlib',
+          'requests',
+          'flask',
+          'configparser'
+      ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

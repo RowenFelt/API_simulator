@@ -1,2 +1,4 @@
 testing/__httpantry_cache__/*
 httpantry.egg*
+build/*
+dist/*
