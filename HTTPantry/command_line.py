@@ -8,6 +8,6 @@ def main():
         arg = sys.argv[1]
 
         if arg == 'server':
-            print("running server")
+            httpantry.http_proxy_server.init_proxy_server()
         else:
             print("help")

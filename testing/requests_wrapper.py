@@ -2,10 +2,8 @@ import requests
 from requests.models import Response
 import sys
 import httpantry.proxy_database as pr_db
-import httpantry.parse_configuration as parse_configuration
+import httpantry.parse_configuration as pc
 from datetime import datetime
-
-user_params = parse_configuration.userConfiguration()
 
 def handle_request(method_name, *args, **kwargs):
     """
@@ -28,7 +26,7 @@ def invalid_timestamp(timestamp):
     """
     if timestamp == None:
         return True
-    elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
+    elif (timestamp + pc.user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
         return True
     else:
         return False
@@ -58,7 +56,7 @@ def resolve_request(method_name, *args, **kwargs):
     method_to_call = getattr(requests, method_name)
     resp = method_to_call(*args, **kwargs)
     print("\t resolving request")
-    if any(api in args[0] for api in user_params.uncached_apis):
+    if any(api in args[0] for api in pc.user_params.uncached_apis):
         return resp
     else:
         pr_db.store(method_name.upper(), args[0], resp)

@@ -7,7 +7,7 @@ cache = {}
 
 def store(method, url, response):
     ''' stores a response in the proxy_database SQLite table'''
-    conn = sqlite3.connect('data/proxy_database.db')
+    conn = sqlite3.connect('__httpantry_cache__/proxy_database.db')
     c = conn.cursor()
     # Create table
     init_table(conn, c)
@@ -27,7 +27,7 @@ def temp_store(method, url, response):
 
 def retrieve(method, url):
     ''' retrieves a response stored with method and url or None if none is found'''
-    conn = sqlite3.connect('data/proxy_database.db')
+    conn = sqlite3.connect('__httpantry_cache__/proxy_database.db')
     c = conn.cursor()
     init_table(conn, c)
     c.execute('SELECT response,timestamp FROM proxy_responses WHERE method = "{mt}" AND url = "{ut}"'

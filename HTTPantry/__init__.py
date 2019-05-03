@@ -1,10 +1,13 @@
 import httpantry.parse_configuration as parse_configuration
 import requests
 from .requests_wrapper import handle_request
+import httpantry.http_proxy_server as http_proxy_server
+import os
+import stat
 
-print("httpantry imported")
 
-user_params = parse_configuration.userConfiguration()
+CACHE_PATH = "__httpantry_cache__"
+DEPLOYABLE_PATH = "deployable_database.py"
 
 def __getattr__(name):
     """
@@ -28,7 +31,17 @@ def __getattr__(name):
         except:
             raise
     
-    if name in known_methods:
+    if name == 'init_proxy_server':
+        return http_proxy_server.init_proxy_server()
+    elif name in known_methods:
         return call_known_method
     else:
         return call_unknown_method
+
+def validate_cache_dir():
+    ''' Validates that the cache directory has been set up correctly '''
+    if not os.path.isdir(CACHE_PATH):
+        os.mkdir(CACHE_PATH) 
+
+validate_cache_dir()
+parse_configuration.userConfiguration()

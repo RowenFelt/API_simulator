@@ -1,0 +1,5 @@
+data
+__pycache__/*
+*.pyc
+__httpantry_cache__/*
+config
