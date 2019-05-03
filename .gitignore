@@ -1,7 +1,8 @@
 plugins/data
 plugins/logfile
-tools/save.p
-tools/data
-tools/__pycache__/
-tools/config
-tools/custom_responses.json
+HTTPantry/save.p
+HTTPantry/data
+HTTPantry/__pycache__/*
+HTTPantry/config
+HTTPantry/custom_responses.json
+httpantry.egg-info/*

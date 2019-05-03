@@ -1,0 +1,16 @@
+[GENERAL]
+port_number = 5000
+persistence = True
+uncached_apis = yourmom.com http://httpbin.org/image/jpeg
+
+[CUSTOM_RESPONSES]
+use_custom_responses = True
+file_name = custom_responses.json
+
+[TIMEOUT]
+days = 0
+hours = 0
+minutes = 0
+seconds = 5
+milliseconds = 0
+

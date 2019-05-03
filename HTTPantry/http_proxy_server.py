@@ -1,12 +1,10 @@
 from flask import Flask, flash, request, Response, send_from_directory, redirect, url_for, jsonify, json, make_response
 import requests
-import proxy_database as pr_db
-import parse_configuration
+import httpantry.proxy_database as pr_db
+import httpantry.parse_configuration as pc
 from datetime import datetime
 
 app = Flask(__name__)
-user_params = None
-
 
 @app.after_request
 def after_request(response):
@@ -21,7 +19,7 @@ def after_request(response):
 def proxy_request(path):
     ''' Returns a stored response if such exists, otherwise returns -1 '''
     # get url and method to store in cache
-    response, timestamp = user_params.retrieve(request.method, request.url)
+    response, timestamp = pc.user_params.retrieve(request.method, request.url)
     if response == None or invalid_timestamp(timestamp):
        # carry out request, store response database 
         response = resolve_request(request)
@@ -32,12 +30,10 @@ def proxy_request(path):
 @app.route('/config', methods=['POST'])
 def config_dynamic():
     """ Sets a user configuration as described in the request body """
-    global user_params
-    temp_params, result = parse_configuration.dynamically_config(request.json, user_params)
+    result = pc.dynamically_config(request.json)
     if result:
-        user_params = temp_params
-        print(user_params.persistence)
-        print(user_params.response_file)
+        print(pc.user_params.persistence)
+        print(pc.user_params.response_file)
         return make_response("Success", 200)
     else:
         return make_response("Failure", 404)
@@ -46,7 +42,7 @@ def invalid_timestamp(timestamp):
     ''' Returns True if timestamp is invalid, or False otherwise '''
     if timestamp == None:
         return True
-    elif (timestamp + user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
+    elif (timestamp + pc.user_params.timeout) < pr_db.unix_time_millis(datetime.now()):
         return True
     else:
         return False
@@ -72,22 +68,15 @@ def resolve_request(request):
         cookies=request.cookies,
         allow_redirects=False)
     print("resolving request")
-    if any(api in request.url for api in user_params.uncached_apis):
+    if any(api in request.url for api in pc.user_params.uncached_apis):
         return resp
     else:
-        user_params.store(request.method, request.url, resp)
+        pc.user_params.store(request.method, request.url, resp)
         return resp
 
-
-def update_cache():
-    # currently updating in a non-readable format, need to look into jsonifying
-    # binary data
-    # pickle.dump(cache, open("save.p", "wb"))
-    return
-
-if __name__ == "__main__":
-    user_params = parse_configuration.userConfiguration()
+def init_proxy_server():
+    pc.userConfiguration()
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
     app.debug = True
-    app.run(port=user_params.port_number)
+    app.run(port=pc.user_params.port_number)
