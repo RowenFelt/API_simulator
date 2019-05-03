@@ -92,7 +92,7 @@ def evaluate_custom_responses_parameters(file_name):
         # if file does not already exist, create it with some example data
         example_data = [{
             "method": "GET",
-            "url": "http://httpbin.org/ip",
+            "url": "http://httpbin.org/get",
             "content": {
                 "args": {},
                 "headers": {
@@ -102,7 +102,7 @@ def evaluate_custom_responses_parameters(file_name):
                     "User-Agent": "python-requests/2.21.0"
                 },
                 "origin": "140.233.185.118, 140.233.185.118",
-                "url": "https://httpbin.org/ip"
+                "url": "https://httpbin.org/get"
             }
         }]
         with open(file_name, 'x') as outfile:

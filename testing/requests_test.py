@@ -48,8 +48,8 @@ def delete_test():
 
 def custom_responses_test():
     print("custom responses:")
-    r = requests.get('http://httpbin.org/ip', proxies=proxy_urls)
-    r2 = requests.get('http://httpbin.org/ip')
+    r = requests.get('http://httpbin.org/get', proxies=proxy_urls)
+    r2 = requests.get('http://httpbin.org/get')
     if r.json() == r2.json():
         print("passed")
     else:
