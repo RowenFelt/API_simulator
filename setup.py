@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="httpantry",
-    version="0.0.4",
+    version="0.0.5",
     author="Rowen Felt, Zebediah Millslagle",
     author_email="rowenfelt@gmail.com, zmillslagle@gmail.com",
     description="Caches HTTP requests for faster, more efficient development",
