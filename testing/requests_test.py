@@ -1,6 +1,11 @@
 import requests
 import os
 import httpantry.proxy_database as pr_db
+import httpantry.parse_configuration as pc
+import json
+from requests.models import Response
+
+pc.userConfiguration()
 
 proxy_urls = {
   'http': 'http://localhost:5000'
@@ -48,9 +53,12 @@ def delete_test():
 
 def custom_responses_test():
     print("custom responses:")
-    r = requests.get('http://httpbin.org/get', proxies=proxy_urls)
-    r2 = requests.get('http://httpbin.org/get')
-    if r.json() == r2.json():
+    r = requests.get('http://fakeurl.org/get', proxies=proxy_urls)
+    with open(pc.user_params.custom_response_file, 'r') as json_file:
+        data = json.load(json_file)
+        custom_response = data[0]
+        r2 = json.dumps(custom_response["content"])
+    if json.dumps(r.json()) == r2:
         print("passed")
     else:
         print("failed")
@@ -79,7 +87,7 @@ def uncached_url_test():
 def set_dynamic_config_test():
     print("dynamic configuration:")
     url = "http://localhost:5000/config"
-    r = requests.post(url, json = {'persistence':'False', 'response_file':'True'}, proxies=proxy_urls)
+    r = requests.post(url, json = {'persistence':'False'}, proxies=proxy_urls)
     if r.status_code == 200:
         print("passed")
     else:

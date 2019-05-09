@@ -19,6 +19,14 @@ The server can be killed at any time. To remove the cache directory and all cont
 
 ##### Note: the proxy server cannot proxy HTTPS requests. For HTTPS requests, please consider using the wrapper functionality for the Requests library.
 
+To create the ```__httpantry_cache__``` directory and populate it with the default infrastructure without running the proxy server or importing the wrapper functions, run:
+
+```httpantry init```
+
+To flush the cache, run:
+
+```httpantry flush```
+
 ### Using the wrapper functions
 
 This package contains wrapper functions for the user-facing API of the Python Requests library. These wrapper functions include:
@@ -72,17 +80,16 @@ httpantry allows for customized responses. These responses are recorded in ```__
 [
     {
         "method": "GET",
-        "url": "http://httpbin.org/get",
+        "url": "http://fakeurl.org/get",
         "content": {
             "args": {},
             "headers": {
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate",
-                "Host": "httpbin.org",
+                "Host": "fakeurl.org",
                 "User-Agent": "python-requests/2.21.0"
             },
-            "origin": "140.233.185.118, 140.233.185.118",
-            "url": "https://httpbin.org/get"
+            "url": "http://fakeurl.org/get"
         }
     }
 ]
